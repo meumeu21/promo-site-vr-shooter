@@ -1,6 +1,5 @@
-CREATE TABLE IF NOT EXISTS requests (
+CREATE TABLE IF NOT EXISTS booking_requests (
   id BIGSERIAL PRIMARY KEY,
-  type TEXT NOT NULL CHECK (type IN ('booking', 'partner')),
   payload JSONB NOT NULL,
   status TEXT NOT NULL CHECK (status IN ('new', 'in-progress', 'closed')) DEFAULT 'new',
   city TEXT,
@@ -12,15 +11,32 @@ CREATE TABLE IF NOT EXISTS requests (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE requests ADD COLUMN IF NOT EXISTS source TEXT;
-ALTER TABLE requests ADD COLUMN IF NOT EXISTS manager_note TEXT;
-ALTER TABLE requests ADD COLUMN IF NOT EXISTS phone TEXT;
+CREATE TABLE IF NOT EXISTS partner_requests (
+  id BIGSERIAL PRIMARY KEY,
+  payload JSONB NOT NULL,
+  status TEXT NOT NULL CHECK (status IN ('new', 'in-progress', 'closed')) DEFAULT 'new',
+  city TEXT,
+  club TEXT,
+  source TEXT,
+  manager_note TEXT,
+  phone TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
 
-CREATE INDEX IF NOT EXISTS idx_requests_status ON requests(status);
-CREATE INDEX IF NOT EXISTS idx_requests_created_at ON requests(created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_requests_club ON requests(club);
-CREATE INDEX IF NOT EXISTS idx_requests_source ON requests(source);
-CREATE INDEX IF NOT EXISTS idx_requests_phone ON requests(phone);
+CREATE INDEX IF NOT EXISTS idx_booking_requests_status ON booking_requests(status);
+CREATE INDEX IF NOT EXISTS idx_booking_requests_created_at ON booking_requests(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_booking_requests_club ON booking_requests(club);
+CREATE INDEX IF NOT EXISTS idx_booking_requests_source ON booking_requests(source);
+CREATE INDEX IF NOT EXISTS idx_booking_requests_phone ON booking_requests(phone);
+
+CREATE INDEX IF NOT EXISTS idx_partner_requests_status ON partner_requests(status);
+CREATE INDEX IF NOT EXISTS idx_partner_requests_created_at ON partner_requests(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_partner_requests_club ON partner_requests(club);
+CREATE INDEX IF NOT EXISTS idx_partner_requests_source ON partner_requests(source);
+CREATE INDEX IF NOT EXISTS idx_partner_requests_phone ON partner_requests(phone);
+
+DROP TABLE IF EXISTS requests;
 
 CREATE TABLE IF NOT EXISTS live_current (
   id INTEGER PRIMARY KEY CHECK (id = 1),
