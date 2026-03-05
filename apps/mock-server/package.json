@@ -6,7 +6,8 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
-    "test:loader": "tsx src/test-loader.ts"
+    "test:loader": "tsx src/test-loader.ts",
+    "test:engine": "tsx src/test-engine.ts"
   },
   "dependencies": {
     "dotenv": "^16.4.7",
